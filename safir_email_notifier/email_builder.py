@@ -15,9 +15,14 @@ import gettext
 from jinja2 import Environment, FileSystemLoader
 import os
 
+import logging
+
+LOG = logging.getLogger(__name__)
+
 PATH = os.path.dirname(os.path.abspath(__file__))
 localedir = os.path.join(PATH, 'locale')
 DEFAULT_LANG = 'tr'
+
 
 PATH = os.path.dirname(os.path.abspath(__file__))
 TEMPLATE_ENVIRONMENT = Environment(
@@ -27,16 +32,11 @@ TEMPLATE_ENVIRONMENT = Environment(
         './templates/' + DEFAULT_LANG)),
     trim_blocks=False)
 
-try:
-    lang = gettext.translation('email_builder',
+lang = gettext.translation('email_builder',
                                localedir=localedir,
                                languages=[DEFAULT_LANG])
-except KeyError:
-    lang = gettext.translation('email_builder',
-                               localedir=localedir)
-
 lang.install()
-_ = lang.ugettext
+_ = lang.gettext
 
 MAIL_TEMPLATES = {
     'user_activation': {
@@ -54,7 +54,7 @@ MAIL_TEMPLATES = {
     'alarm_ok': {
         'template_file': 'cloud_alarm_ok.ftl',
         'subject': _('B3LAB Safir Cloud Alarm State Change Notification')
-    },    
+    },
     'billing_alarm': {
         'template_file': 'billing_alarm_notification.ftl',
         'subject': _('B3LAB Safir Cloud Credit Alarm Notification')
@@ -130,3 +130,4 @@ class EmailBuilder:
     def render_template(filename, context):
         return TEMPLATE_ENVIRONMENT.get_template(
             filename).render(context)
+
