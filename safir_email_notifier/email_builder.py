@@ -36,7 +36,7 @@ except KeyError:
                                localedir=localedir)
 
 lang.install()
-_ = lang.ugettext
+_ = lang.gettext
 
 MAIL_TEMPLATES = {
     'user_activation': {
